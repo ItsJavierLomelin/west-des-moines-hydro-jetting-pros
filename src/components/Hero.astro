@@ -1,0 +1,34 @@
+---
+import { pageImage } from '../lib/pageImages';
+import { business } from '../lib/site';
+import { city } from '../data/city';
+import { u } from '../lib/utils';
+import RequestForm from './RequestForm.astro';
+const { headline, intro, location, crumbs = [], eyebrow = city.ui.heroEyebrow } = Astro.props;
+const showImage = !['Privacy', 'Terms'].includes(location);
+const img = pageImage(headline);
+---
+<div class="nh-hero-shell"><section class="hero">
+  <div class={showImage ? 'hero-inner' : 'hero-inner hero-inner--text'}>
+    <div class="hero-copy-col">
+      {crumbs.length > 0 && (
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href={u('/')}>Home</a>
+          {crumbs.map((c, i) => <><span aria-hidden="true">/</span>{i < crumbs.length - 1 ? <a href={u(c.href)}>{c.label}</a> : <span>{c.label}</span>}</>)}
+        </nav>
+      )}
+      <p class="chip">{eyebrow}</p>
+      <h1>{headline}</h1>
+      <p class="hero-copy">{intro}</p>
+      <div class="hero-cta"><a class="button-primary" href={business.phoneHref}>Call {business.phoneDisplay}</a><a class="button-soft" href="#request-service">Request a call</a></div>
+    </div>
+    {showImage && (
+      <figure class="hero-photo">
+        <img src={u(img.src)} alt={img.alt} width="1200" height="896" loading="eager" decoding="async" fetchpriority="high" />
+        <figcaption><strong>Cleaning from the inside of the line</strong></figcaption>
+      </figure>
+    )}
+  </div>
+</section><div class="nh-hero-form"><RequestForm location={location} /></div></div>
+
+<style is:global>.nh-hero-shell{display:grid;grid-template-columns:minmax(0,2fr) minmax(320px,1fr);max-width:1280px;margin:auto;align-items:start}.nh-hero-shell .hero-inner{grid-template-columns:1fr;padding:56px 24px}.nh-hero-shell .hero-visual{display:none}.nh-hero-form{padding:56px 24px}.nh-hero-form .form-card{width:100%;max-width:100%}@media(max-width:900px){.nh-hero-shell{grid-template-columns:1fr}.nh-hero-form{padding:0 24px 44px}}</style>

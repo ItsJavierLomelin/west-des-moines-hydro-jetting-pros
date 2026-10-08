@@ -1,0 +1,46 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import { city, C, services, guides, neighborhoods } from '../data/city';
+import { faqSchema } from '../lib/seo';
+import { business } from '../lib/site';
+import { u } from '../lib/utils';
+const home = city.home;
+const [s1, s2, s3, s4] = home.sections;
+const faqs = home.faqs;
+const steps = home.steps;
+---
+<Base title={home.title} description={home.desc} path="/" extraSchema={[faqSchema(faqs)]}>
+  <Hero headline={home.h1} intro={home.intro} location="Homepage" />
+  <section class="content-section"><div class="content-inner">
+    <p class="eyebrow">Drain problems</p>
+    <div class="section-head"><h2 class="section-title">{s1.h}</h2><p class="section-intro">{s1.ps[0]}</p></div>
+    <div class="card-grid">
+      {services.map((s, i) => <article class="card"><span class="card-icon" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span><p class="eyebrow">Service {String(i + 1).padStart(2, '0')}</p><h3><a href={u(`/services/${s.slug}/`)}>{s.name}</a></h3><p>{s.blurb}</p></article>)}
+      <article class="card card-spec"><p class="eyebrow">Method guides</p><h3>Jetting and snaking</h3><p>Two short guides on how the methods work and how they compare.</p><ul class="check-list">{guides.map((g) => <li><a href={u(`/guides/${g.slug}/`)}>{g.name}</a></li>)}</ul></article>
+    </div>
+  </div></section>
+  <section class="dark-band"><div class="content-inner dark-grid">
+    <div>
+      <p class="eyebrow eyebrow-light">Local area pages</p>
+      <h2 class="section-title section-title-light">{s3.h}</h2>
+      <p class="band-text">{home.bandText}</p>
+      <div class="pill-grid pill-grid-dark">{neighborhoods.map((n) => <a class="pill" href={u(`/neighborhood/${n.slug}/`)}>{n.name}</a>)}</div>
+    </div>
+    <aside class="dispatch-card"><p class="eyebrow">Phone line</p><h3>{home.dispatchTitle}</h3><p>{home.dispatchText}</p><a class="button-dark" href={business.phoneHref}>Call {business.phoneDisplay}</a></aside>
+  </div></section>
+  <section class="content-section"><div class="content-inner">
+    <p class="eyebrow">Before you book</p>
+    <h2 class="section-title">{s2.h}</h2>
+    {s2.ps.map((p) => <p class="section-intro" style="margin-bottom:14px" set:html={p} />)}
+    <h2 class="section-title" style="margin-top:56px">{s4.h}</h2>
+    {s4.ps.map((p) => <p class="section-intro" style="margin-bottom:14px" set:html={p} />)}
+    <div class="card-grid card-grid-3" style="margin-top:36px">{steps.map((s, i) => <article class="card"><p class="eyebrow">Step {i + 1}</p><h3>{s.t}</h3><p>{s.d}</p></article>)}</div>
+  </div></section>
+  <section class="content-section content-section-alt"><div class="content-inner">
+    <p class="eyebrow">Questions</p>
+    <h2 class="section-title">{home.faqHeading}</h2>
+    <div class="content-list">{faqs.map((f) => <article class="faq-row"><h3>{f.q}</h3><p>{f.a}</p></article>)}</div>
+  </div></section>
+<section class="nh-body"><div class="nh-inner"><p set:html={home.footerLinksHtml.replace(/href="(\/[^\"]*)"/g, (_m, h) => 'href="' + u(h) + '"')} /></div></section>
+</Base>
